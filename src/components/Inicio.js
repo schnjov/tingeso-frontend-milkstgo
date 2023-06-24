@@ -14,6 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import NuevoProveedorFormulario from './NuevoProveedorFormulario';
 import ListarProveedores from './ListarProveedores.js';
 import CargarAcopios from './CargarAcopios';
+import CargarValores from './CargarValores';
 
 const theme = createTheme();
 
@@ -36,6 +37,9 @@ export default function Inicio() {
       break;
     case 3:
       componentToDisplay = <CargarAcopios />;
+      break;
+    case 4:
+      componentToDisplay = <CargarValores/>;
       break;
     default:
       break;

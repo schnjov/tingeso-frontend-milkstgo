@@ -38,7 +38,7 @@ const CargarAcopios = () => {
         }
       })
       .catch(error => {
-        setAlerta({ type: 'success', message: 'Archivo cargado exitosamente' });
+        setAlerta({ type: 'success', message: error.toString() });
       })
   };
 
@@ -46,7 +46,7 @@ const CargarAcopios = () => {
     <Card>
       <CardContent>
         <Typography variant="h5" component="div" gutterBottom>
-          Subir archivo Excel
+          Subir archivo Excel para acopios
         </Typography>
         <form onSubmit={handleSubmit}>
           <input
