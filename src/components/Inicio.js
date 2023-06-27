@@ -15,11 +15,19 @@ import NuevoProveedorFormulario from './NuevoProveedorFormulario';
 import ListarProveedores from './ListarProveedores.js';
 import CargarAcopios from './CargarAcopios';
 import CargarValores from './CargarValores';
+import GenerarPagos from './GenerarPagos';
 
 const theme = createTheme();
 
 export default function Inicio() {
   const [vista, setVista] = useState(0);
+  const [quincena, setQuincena] = useState(null);
+
+  const handleGenerarPagosClick = () => {
+    const quincenaElegida = 1;
+    setQuincena(quincenaElegida);
+    setVista(5);
+  };
 
   const handleButtonClick = (number) => {
     setVista(number);
@@ -39,7 +47,10 @@ export default function Inicio() {
       componentToDisplay = <CargarAcopios />;
       break;
     case 4:
-      componentToDisplay = <CargarValores/>;
+      componentToDisplay = <CargarValores />;
+      break;
+    case 5:
+      componentToDisplay = <GenerarPagos quincena={quincena}/>;
       break;
     default:
       break;
@@ -89,7 +100,7 @@ export default function Inicio() {
               <Button variant="contained" onClick={() => handleButtonClick(2)}>Listar proveedores</Button>
               <Button variant="contained" onClick={() => handleButtonClick(3)}>Cargar acopios</Button>
               <Button variant="contained" onClick={() => handleButtonClick(4)}>Cargar valores</Button>
-              <Button variant="contained" onClick={() => handleButtonClick(5)}>Generar pagos</Button>
+              <Button variant="contained" onClick={() => handleGenerarPagosClick()}>Generar pagos</Button>
               <Button variant="contained" onClick={() => handleButtonClick(6)}>Ver pagos</Button>
             </Stack>
           </Container>

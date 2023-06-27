@@ -1,83 +1,40 @@
-import React, { useState } from 'react';
-import { Button, Card, CardContent, Typography, Snackbar, Alert } from '@mui/material';
+import React, { useState, useEffect } from 'react';
 
-const CargarValores = () => {
-  const [file, setFile] = useState(null);
-  const [alerta, setAlerta] = useState(null);
+const GenerarPagos = ({ quincena }) => {
+  const [pagos, setPagos] = useState(null);
 
-  const handleChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleCloseAlert = () => {
-    setAlerta(null);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!file) {
-      setAlerta({ type: 'error', message: 'Por favor, selecciona un archivo' });
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    fetch('http://localhost:8081/valores/save', {
+  useEffect(() => {
+    fetch('http://localhost:8082/planilla/pagos?quincena=' + quincena, {
       method: 'POST',
-      body: formData
     })
       .then(response => {
-        if (response.status === 201) {
-          setAlerta({ type: 'success', message: 'Archivo cargado exitosamente' });
-          // Limpiar el campo del archivo después de enviar
-          setFile(null);
-        } else {
-          setAlerta({ type: 'error', message: 'Error al cargar el archivo' });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
+        return response.json(); 
+      })
+      .then(data => {
+        setPagos(data);
       })
       .catch(error => {
-        setAlerta({ type: 'success', message: error.toString() });
-      })
-  };
+        console.error('There has been a problem with your fetch operation:', error);
+      });
+  }, []);
+
+  if (pagos === null) {
+    return <div>Cargando...</div>;
+  }
 
   return (
-    <Card>
-      <CardContent>
-        <Typography variant="h5" component="div" gutterBottom>
-          Subir archivo Excel para valores
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="file"
-            accept=".xlsx,.xls"
-            onChange={handleChange}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            disableElevation
-          >
-            Subir Archivo
-          </Button>
-        </form>
-      </CardContent>
-      <Snackbar
-        open={!!alerta}
-        autoHideDuration={5000}
-        onClose={handleCloseAlert}
-      >
-        <Alert
-          onClose={handleCloseAlert}
-          severity={alerta?.type}
-          sx={{ width: '100%' }}
-        >
-          {alerta?.message}
-        </Alert>
-      </Snackbar>
-    </Card>
+    <div>
+      <h2>Resultado de la generación de pagos</h2>
+      <ul>
+        {pagos.map((pago, index) => (
+          <li key={index}>{pago}</li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
-export default CargarValores;
+export default GenerarPagos;
